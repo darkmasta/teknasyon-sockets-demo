@@ -30,8 +30,8 @@ const io = require("socket.io")(server, { origins: "*:*" });
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:8080", // dev to prod
-    //origin: "https://defensehere.herokuapp.com", // dev to prod
+    // origin: "http://localhost:8080", // dev to prod
+    origin: "https://teknasyon-demo.herokuapp.com", // dev to prod
   })
 );
 
@@ -82,35 +82,9 @@ app.post(
 );
 
 io.on("connection", (socket) => {
-  socket.on("joinRoom", ({ username, room }) => {
-    const user = userJoin(socket.id, username, room);
-    socket.join(user.room);
-    // Welcome current user
-    socket.emit("message", formatMessage(botName, "Welcome to ChatCord!"));
-
-    // Broadcast when a user connects
-    socket.broadcast
-      .to(user.room)
-      .emit(
-        "message",
-        formatMessage(botName, `${user.username} has joined the chat`)
-      );
-
-    // Send users and room info
-    io.to(user.room).emit("roomUsers", {
-      room: user.room,
-      users: getRoomUsers(user.room),
-    });
-
-    // Listen for chat message
-    socket.on("chatMessage", (msg) => {
-      io.to(user.room).emit("message", formatMessage(user.username, msg));
-    });
-  });
-
   // Runs when client discoenncts
   socket.on("disconnect", () => {
-    io.emit("message", `Some has left the chat`);
+    io.emit("disconnect", `Some has left the chat`);
   });
 
   socket.on("connection", () => {

@@ -81,17 +81,6 @@ app.post(
   })
 );
 
-io.on("connection", (socket) => {
-  // Runs when client discoenncts
-  socket.on("disconnect", () => {
-    io.emit("disconnect", `Some has left the chat`);
-  });
-
-  socket.on("connection", () => {
-    io.emit("message", `Someone connected`);
-  });
-});
-
 server.listen(PORT, () =>
   console.log(`Teknasyon web listening on port ${PORT}!`)
 );

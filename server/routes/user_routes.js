@@ -53,7 +53,9 @@ router.post("/create_new_user", jsonParser, (req, res) => {
 
   User.save()
     .then((user) => {
-      req.io.broadcast.emit("register", user);
+      req.io.on("connection", (client) => {
+        client.broadcast.emit("register", user);
+      });
       res.json("success");
     })
     .catch((err) => res.json(err));
